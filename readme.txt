@@ -18,12 +18,12 @@ Customers can buy for wholesale prices in your WooCommerce store. Offer certain 
 
 * Assign user’s to be wholesale customers.
 * Global discount (percentage) for WooCommerce store.
-* Minimum purchase amount ($) for wholesale customers.
 
 = Upcoming Features =
 These features will be released in any order and may change according to our discretion.
 
 * Minimum quantity required to purchase.
+* Minimum purchase amount ($) for wholesale customers.
 * Tiered based pricing on quantity. (e.g. 1-10 = $10 ea. 11-20 = $9.50 ea. 20+ = $8 ea.)
 * Purchase orders.
 * Purchase on credit.
@@ -56,7 +56,7 @@ We will try our best to assist you to the best of our ability.
 == Installation ==
 1. Upload the plugin files to the \'/wp-content/plugins\' directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the \'Plugins\' screen in WordPress.
-3. Navigate to \'WooCommerce\' and select \’Wholesale Settings\’.
+3. Navigate to \'WooCommerce\' and data will be showing under \'General Settings Tab\' > \'Pricing Options\'.
 4. To enable users to become wholesalers, simply enable the \'Wholesale Customer\' checkbox in the \'Edit User Profile\'.
 
 == Frequently Asked Questions ==
@@ -65,23 +65,12 @@ This has been tested on version 3.0 and up.
 
 == Screenshots ==
 1. Set user to be a Wholesale Customer inside the user’s edit profile page.
-2. Wholesale settings page.
-3. Minimum cart total for wholesale customers.
+2. Set the global discount on your WooCommerce Store for wholesale customers.
 
 == Changelog ==
-
-= 1.0.1 =
-* Feature: minimum cart total for wholesale customers
-* Enhancement: Better UI for settings page.
-* Enhancement: Better coding structure for settings page.
-
 = 1.0.0 =
 * Initial Release.
 
 == Upgrade Notice ==
-
-= 1.0.1 =
-* Please upgrade to 1.0.1 for more features.
-
 = 1.0 =
 * Initial release

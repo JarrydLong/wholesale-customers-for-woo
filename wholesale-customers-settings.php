@@ -30,15 +30,15 @@ class WCS_Settings {
 	$wcs_wholesale_customer = get_user_meta( $user->ID, 'wcs_wholesale_customer', true );
 	?>
 
-	<h3><?php _e( 'Wholesale Customer User Settings', 'wholesale-customers' ); ?></h3>
+	<h3><?php _e( 'Wholesale Customer User Settings', 'wholesale-customer' ); ?></h3>
 
 	<table class="form-table">
 
 		<tr>
-			<th><label for="wholesale-customer"><?php _e( 'Wholesale customer', 'wholesale-customers' ); ?></label></th>
+			<th><label for="wholesale-customer"><?php _e( 'Wholesale customer', 'wholesale-customer' ); ?></label></th>
 
 			<td>
-				<input type="checkbox" name="wcs_wholesale_customer" id="wcs_wholesale_customer" value="1" <?php checked( $wcs_wholesale_customer, 1 );?>/><?php _e( 'Check this option to set this user to receive your wholesale pricing', 'wholesale-customers' ); ?><br />
+				<input type="checkbox" name="wcs_wholesale_customer" id="wcs_wholesale_customer" value="1" <?php checked( $wcs_wholesale_customer, 1 );?>/><?php _e( 'Check this option to set this user to receive your wholesale pricing', 'wholesale-customer' ); ?><br />
 				<!-- <span class="description"></span> -->
 			</td>
 		</tr>

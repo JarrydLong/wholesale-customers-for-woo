@@ -4,7 +4,7 @@
  * Description: Allow wholesale pricing for WooCommerce.
  * Author: YooHoo Plugins
  * Author URI: https://yoohooplugins.com
- * Version: 1.0.1
+ * Version: 1.0
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wholesale-customers
@@ -114,6 +114,50 @@ function wcs_minimum_cart_total(){
 
 add_action( 'woocommerce_checkout_process', 'wcs_minimum_cart_total' );
 add_action( 'woocommerce_before_cart' , 'wcs_minimum_cart_total' );
+
+
+function wc_cost_product_field() {
+    woocommerce_wp_text_input( array( 'id' => 'wholesale_price', 'class' => 'wc_input_price short', 'label' => __( 'Wholesale Price', 'wholesale-customers' ) . ' (' . get_woocommerce_currency_symbol() . ')' ) );
+}
+
+add_action( 'woocommerce_product_options_pricing', 'wc_cost_product_field' );
+
+add_action( 'save_post', 'wc_cost_save_product' );
+function wc_cost_save_product( $product_id ) {
+ 
+     // stop the quick edit interferring as this will stop it saving properly, when a user uses quick edit feature
+    if ( wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
+    	return;
+    }
+
+ 
+    // If this is a auto save do nothing, we only save when update button is clicked
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+
+	if ( isset( $_POST['wholesale_price'] ) && !empty( $_POST['wholesale_price'])) {
+		update_post_meta( $product_id, 'wholesale_price', $_POST['wholesale_price'] );
+	} else {
+		delete_post_meta( $product_id, 'wholesale_price' );
+	}
+}
+
+function return_custom_price($price, $product) {
+    global $post, $blog_id;
+
+    $wholesale_price = get_post_meta($post->ID, 'wholesale_price', true );
+
+    if( empty( $wholesale_price ) ) {
+    	return $price;
+    }
+
+    return $wholesale_price;
+
+}
+add_filter('woocommerce_get_price', 'return_custom_price', 10, 2);
+
 
 
 
