@@ -13,6 +13,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
+// include settings page.
 include( 'wholesale-customers-settings.php' );
 
 function wcs_apply_wholesale_pricing( $price, $product ) {
@@ -25,6 +26,13 @@ function wcs_apply_wholesale_pricing( $price, $product ) {
 
 	if( $is_wholesale != '1' ) {
 		return $discount_price;
+	}
+
+	// check to see if the current product has custom post meta, if it does don't apply the global discount.
+	$wholesale_price = get_post_meta( $product->get_id(), 'wholesale_price', true );
+
+	if( $wholesale_price ) {
+		return $wholesale_price;
 	}
 
 	$wcs_global_discount = (int) get_option( 'wcs_global_discount', true );
@@ -122,7 +130,6 @@ function wc_cost_product_field() {
 
 add_action( 'woocommerce_product_options_pricing', 'wc_cost_product_field' );
 
-add_action( 'save_post', 'wc_cost_save_product' );
 function wc_cost_save_product( $product_id ) {
  
      // stop the quick edit interferring as this will stop it saving properly, when a user uses quick edit feature
@@ -144,21 +151,4 @@ function wc_cost_save_product( $product_id ) {
 	}
 }
 
-function return_custom_price($price, $product) {
-    global $post, $blog_id;
-
-    $wholesale_price = get_post_meta($post->ID, 'wholesale_price', true );
-
-    if( empty( $wholesale_price ) ) {
-    	return $price;
-    }
-
-    return $wholesale_price;
-
-}
-add_filter('woocommerce_get_price', 'return_custom_price', 10, 2);
-
-
-
-
-
+add_action( 'save_post', 'wc_cost_save_product' );
