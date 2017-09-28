@@ -9,21 +9,26 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Allow wholesale customers for your WooCommerce store. Currently supports global discount.
+A simple and easy to use B2B solution for WooCommerce. Wholesale Customers For Woo will assist you in selling wholesale through your WooCommerce store.
 
 == Description ==
-Customers can buy for wholesale prices in your WooCommerce store. Offer certain users global discounts for wholesale price (more features to be added frequently - more below).
+A simple and easy to use B2B solution for WooCommerce. Wholesale Customers For Woo will assist you in selling wholesale through your WooCommerce store.
+
+With a variety of features in the free version, you won’t need another wholesale plugin for WooCommerce. 
+
+Actively updated for features, bug fixes and more! 
 
 == Features ==
 
 * Assign user’s to be wholesale customers.
 * Global discount (percentage) for WooCommerce store.
+* Minimum purchase amount ($) for wholesale customers.
+* Wholesale pricing per product (simple product). Overwrites the global discount.
 
 = Upcoming Features =
 These features will be released in any order and may change according to our discretion.
 
 * Minimum quantity required to purchase.
-* Minimum purchase amount ($) for wholesale customers.
 * Tiered based pricing on quantity. (e.g. 1-10 = $10 ea. 11-20 = $9.50 ea. 20+ = $8 ea.)
 * Purchase orders.
 * Purchase on credit.
@@ -63,14 +68,33 @@ We will try our best to assist you to the best of our ability.
 = What version of WooCommerce does this support? =
 This has been tested on version 3.0 and up.
 
+= My global discount is not working for some products =
+If your product has a wholesale price set, this will overwrite the global discount.
+
 == Screenshots ==
 1. Set user to be a Wholesale Customer inside the user’s edit profile page.
 2. Set the global discount on your WooCommerce Store for wholesale customers.
+3. Minimum cart totals for WooCommerce checkout for wholesale customers.
+4. WooCommerce Simple product wholesale pricing.
 
 == Changelog ==
+= 1.0.2 =
+* Enhancement: Wholesale pricing for simple product.
+
+= 1.0.1 =
+* Feature: minimum cart total for wholesale customers
+* Enhancement: Better UI for settings page.
+* Enhancement: Better coding structure for settings page.
+
 = 1.0.0 =
 * Initial Release.
 
 == Upgrade Notice ==
+= 1.0.2 =
+* Please update for new features.
+
+= 1.0.1 =
+* Please update.
+
 = 1.0 =
 * Initial release
