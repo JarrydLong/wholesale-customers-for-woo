@@ -4,7 +4,7 @@
  * Description: Allow wholesale pricing for WooCommerce.
  * Author: YooHoo Plugins
  * Author URI: https://yoohooplugins.com
- * Version: 1.0
+ * Version: 1.0.2
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wholesale-customers
@@ -152,3 +152,8 @@ function wc_cost_save_product( $product_id ) {
 }
 
 add_action( 'save_post', 'wc_cost_save_product' );
+
+
+
+
+
