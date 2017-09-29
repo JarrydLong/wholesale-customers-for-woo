@@ -4,7 +4,7 @@
  * Description: Allow wholesale pricing for WooCommerce.
  * Author: YooHoo Plugins
  * Author URI: https://yoohooplugins.com
- * Version: 1.0.2
+ * Version: 1.0.3
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wholesale-customers
@@ -24,14 +24,14 @@ function wcs_apply_wholesale_pricing( $price, $product ) {
 
 	$is_wholesale = get_user_meta( $current_user->ID, 'wcs_wholesale_customer', true );
 
-	if( $is_wholesale != '1' ) {
+	if( !$is_wholesale ) {
 		return $discount_price;
 	}
 
 	// check to see if the current product has custom post meta, if it does don't apply the global discount.
 	$wholesale_price = get_post_meta( $product->get_id(), 'wholesale_price', true );
 
-	if( $wholesale_price ) {
+	if( isset( $wholesale_price ) && $wholesale_price !== '' ) {
 		return $wholesale_price;
 	}
 
@@ -63,15 +63,87 @@ if ( !is_admin() || defined('DOING_AJAX') ) {
 	add_filter("woocommerce_variable_price_html", "wcs_calculate_variation_range_prices", 10, 2);
 }
 
-function wcs_calculate_variation_range_prices($variation_range_html, $product) {
+function wcs_calculate_variation_range_prices( $variation_range_html, $product ) {
+	global $current_user;
+
+	$is_wholesale = get_user_meta( $current_user->ID, 'wcs_wholesale_customer', true );
 	$prices = $product->get_variation_prices( true );
-	$min_price     = current($prices['price']);
-	$max_price     = end($prices['price']);
+
+	if( !$is_wholesale ) {
+		$min_price     = current( $prices['price'] );
+		$max_price     = end( $prices['price'] );
+
+		return wc_format_price_range( $min_price, $max_price );
+	}
+
 	
-	$wholesale_min_price = wcs_apply_wholesale_pricing($min_price, $product);
-	$wholesale_max_price = wcs_apply_wholesale_pricing($max_price, $product);	   
+	// Check variation pricing for wholesale customers (individual pricing)
+	$product_id = $product->get_id();
+	$product_variables = new WC_Product_Variable( $product_id );
+	$variables = $product_variables->get_available_variations();
+
+	if( ! empty( $variables ) ) {
+
+		//we may need this later.
+		$wcs_global_discount = (int) get_option( 'wcs_global_discount', true );
+
+		if( $wcs_global_discount ) {
+			$percentage = $wcs_global_discount / 100;
+		}
 	
-	return wc_format_price_range($wholesale_min_price, $wholesale_max_price);
+
+		$prices['wholesale_price'] = array();
+
+		foreach( $variables as $variation ) {
+
+			$id = $variation['variation_id'];
+
+			$wholesale_price = get_post_meta( $id, 'wholesale_price', true );
+
+				//if individual wholesale price is set for variation
+				if( isset( $wholesale_price ) && $wholesale_price !== '' ){
+
+					$prices['wholesale_price'][$id] = $wholesale_price;
+
+				}else{
+
+					// check to see if global discount is set and apply discount. ABSTRACT THIS TO A FUNCTION!!!!
+					if( $wcs_global_discount ) {
+						$discount = $prices['price'][$id] * $percentage;
+						$price_w_discount = $prices['price'][$id] - $discount;
+
+						//add to array now.
+						$prices['wholesale_price'][$id] =  sprintf( "%.2f", $price_w_discount );
+
+					}else{
+						$prices['wholesale_price'][$id] = $prices['price'][$id];	
+					}	
+				}
+		}
+
+		if( ! empty( $prices['wholesale_price'] ) ) {
+		asort( $prices['wholesale_price'] );
+
+		$wholesale_min_price = current( $prices['wholesale_price'] );
+		$wholesale_max_price = end( $prices['wholesale_price'] );
+		}
+
+		//sort from low to high for value.
+		
+
+	}else{
+
+		$min_price     = current( $prices['price'] );
+		$max_price     = end( $prices['price'] );
+
+		
+		$wholesale_min_price = wcs_apply_wholesale_pricing( $min_price, $product );
+		$wholesale_max_price = wcs_apply_wholesale_pricing( $max_price, $product );	   
+
+	}
+
+	return wc_format_price_range( $wholesale_min_price, $wholesale_max_price );
+	
 }
 
 /**
@@ -124,13 +196,13 @@ add_action( 'woocommerce_checkout_process', 'wcs_minimum_cart_total' );
 add_action( 'woocommerce_before_cart' , 'wcs_minimum_cart_total' );
 
 
-function wc_cost_product_field() {
-    woocommerce_wp_text_input( array( 'id' => 'wholesale_price', 'class' => 'wc_input_price short', 'label' => __( 'Wholesale Price', 'wholesale-customers' ) . ' (' . get_woocommerce_currency_symbol() . ')' ) );
+function wcs_cost_product_field() {
+    woocommerce_wp_text_input( array( 'id' => 'wholesale_price', 'class' => 'wc_input_price short', 'label' => __( 'Wholesale price', 'wholesale-customers' ) . ' (' . get_woocommerce_currency_symbol() . ')' ) );
 }
 
-add_action( 'woocommerce_product_options_pricing', 'wc_cost_product_field' );
+add_action( 'woocommerce_product_options_pricing', 'wcs_cost_product_field' );
 
-function wc_cost_save_product( $product_id ) {
+function wcs_cost_save_product( $product_id ) {
  
      // stop the quick edit interferring as this will stop it saving properly, when a user uses quick edit feature
     if ( wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
@@ -151,9 +223,46 @@ function wc_cost_save_product( $product_id ) {
 	}
 }
 
-add_action( 'save_post', 'wc_cost_save_product' );
+add_action( 'save_post', 'wcs_cost_save_product' );
 
 
+/**
+ * Add custom pricing fields to Variations.
+ *
+ * From http://www.remicorson.com/woocommerce-custom-fields-for-variations/
+ */
 
+function wcs_variation_settings_fields( $loop, $variation_data, $variation ) {
+	
+	woocommerce_wp_text_input( 
+		array( 
+			'id'          => 'wholesale_price[' . $variation->ID . ']', 
+			'label'       => __( 'Wholesale price (' . get_woocommerce_currency_symbol() . ')', 'wholesale-customers' ), 
+			'desc_tip'    => 'true',
+			'description' => __( 'This price will be available to wholesale customers only. Overrites global discount.', 'wholesale-customers' ),
+			'value'       => get_post_meta( $variation->ID, 'wholesale_price', true ),
+			'data_type'		  => 'price',
+		)
+	);
 
+}
 
+add_action( 'woocommerce_variation_options_pricing', 'wcs_variation_settings_fields', 5, 3 );
+
+// save custom fields for variations.
+function wcs_save_variation_settings_fields( $post_id ) { 
+
+	$number_field = $_POST['wholesale_price'][ $post_id ];
+
+	if( isset( $number_field ) ) {
+
+		if( intval($number_field) < 0 ){
+			$number_field = 0;
+		}
+		update_post_meta( $post_id, 'wholesale_price', esc_attr( $number_field ) );
+	}else{
+		delete_post_meta( $post_id, 'wholesale_price' );
+	}
+
+}
+add_action( 'woocommerce_save_product_variation', 'wcs_save_variation_settings_fields', 10, 1 );

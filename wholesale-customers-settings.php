@@ -110,7 +110,7 @@ class WCS_Settings {
 
         $settings = array(
             'section_title' => array(
-                'name'     => __( 'Wholesale Settings', 'woocommerce-settings-tab-demo' ),
+                'name'     => __( 'Wholesale Settings', 'wholesale-customers' ),
                 'type'     => 'title',
                 'desc'     => '',
                 'id'       => 'wcs_settings_tab_section_title'
@@ -157,32 +157,58 @@ class WCS_Settings {
         return apply_filters( 'wcs_settings_tab_settings', $settings );
     }
 
-    function add_custom_wholesale_cost_column_header( $columns ){
+    public static function add_custom_wholesale_cost_column_header( $columns ){
 
-        $columns['wholesale_price'] = __( 'Wholesale Price', 'wholesale-customers' );
+        $columns['wholesale_price'] = __( 'Wholesale price', 'wholesale-customers' );
 
         return $columns;
 
     }
 
-    function add_custom_wholesale_cost_column( $column, $post_id ) {
+    public static function add_custom_wholesale_cost_column( $column, $post_id ) {
 
         $wholesale_price = get_post_meta( $post_id, 'wholesale_price', true );
         $currency = get_woocommerce_currency_symbol();
 
+
+        // Check if variable.
+        $product_variables = new WC_Product_Variable( $post_id);
+        $variables = $product_variables->get_available_variations();
+
+        // if( ! empty( $variables ) ) {
+
+        //   $wholesale_variation = array();
+
+        //   foreach( $variables as $variation ){
+
+        //     $wholesale_variation[] = $variation['display_price'];
+
+        //   }
+
+        // asort( $wholesale_variation );
+
+        // $min_price = current( $wholesale_variation );
+        // $max_price = end( $wholesale_variation ); 
+        
+        // }  
+       
         if ( $column == 'wholesale_price' ) {
 
-            if( $wholesale_price ) {
+            if( ! empty( $variables ) ){
+                //echo $currency . number_format( $min_price, 2 ) . ' - ' . $currency . number_format( $max_price, 2 );
+                _e( 'N/A', 'wholesale-customers' );
+            }elseif( $wholesale_price ) {
                  echo $currency . number_format( $wholesale_price, 2 );
             }else{
                 _e( 'N/A', 'wholesale-customers' );
             }
-           
-        }
 
+        }
     }
 
-}
+
+
+} // end class
 
 WCS_Settings::hooks();
 

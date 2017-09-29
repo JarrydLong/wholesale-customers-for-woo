@@ -20,22 +20,21 @@ Actively updated for features, bug fixes and more!
 
 == Features ==
 
-* Assign user’s to be wholesale customers.
+* Assign user’s to be wholesale customers. (This may be used for VIP guests for WooCommerce).
 * Global discount (percentage) for WooCommerce store.
 * Minimum purchase amount ($) for wholesale customers.
-* Wholesale pricing per product (simple product). Overwrites the global discount.
+* Wholesale pricing for each product (simple products and/or variations). Overwrites the global discount if wholesale price is set within a particular product.
 
 = Upcoming Features =
 These features will be released in any order and may change according to our discretion.
 
-* Minimum quantity required to purchase.
+* Minimum/Maximum quantity per product.
 * Tiered based pricing on quantity. (e.g. 1-10 = $10 ea. 11-20 = $9.50 ea. 20+ = $8 ea.)
 * Purchase orders.
 * Purchase on credit.
 * Front-end wholesale customer capture form/registration.
 * Show products in category X to only wholesale customers.
 * Hide pricing for non-wholesale customers.
-* Wholesale pricing for each product. (If a product has a wholesale price set to it, this overrides the global wholesale discount).
 * Global wholesale pricing can be set to either a fixed amount or percentage.
 * Global discount per category for wholesale customers (fixed or percentage).
 * Exclusive sales to only wholesale customers. 
@@ -46,6 +45,7 @@ These features will be released in any order and may change according to our dis
 * Email functionality for all wholesale customers.
 * List of all wholesale customers in one place.
 * Shipping methods based on wholesale customer.
+* Import / Export products for WooCommerce (including custom product meta).
 * More features to be listed…
 
 == Support ==
@@ -78,6 +78,10 @@ If your product has a wholesale price set, this will overwrite the global discou
 4. WooCommerce Simple product wholesale pricing.
 
 == Changelog ==
+= 1.0.3 =
+* General Bug Fixes
+* Enhancement: Wholesale pricing for variation products ( Includes the pricing range to work with global discount + wholesale pricing at the same time).
+
 = 1.0.2 =
 * Enhancement: Wholesale pricing for simple product.
 
@@ -90,6 +94,9 @@ If your product has a wholesale price set, this will overwrite the global discou
 * Initial Release.
 
 == Upgrade Notice ==
+= 1.0.3 =
+* Please upgrade for new features and bug fixes.
+
 = 1.0.2 =
 * Please update for new features.
 
