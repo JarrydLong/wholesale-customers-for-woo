@@ -1,8 +1,8 @@
-=== Wholesale Customers For WooCommerce ===
+﻿=== Wholesale Customers For WooCommerce ===
 Contributors: andrewza, yoohooplugins, travislima
 Tags: woocommerce wholesale, wholesale plugin, wholesale prices, wholesale pricing, woocommerce wholesale pricing, woocommerce, wholesale
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4GC4JEZH7KSKL
-Requires at least: 4.0
+Requires at least: 4.6
 Tested up to: 4.8
 Requires PHP: 5.6
 Stable tag: trunk
@@ -12,20 +12,30 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 A simple and easy to use B2B solution for WooCommerce. Wholesale Customers For Woo will assist you in selling wholesale through your WooCommerce store.
 
 == Description ==
+
 A simple and easy to use B2B solution for WooCommerce. Wholesale Customers For Woo will assist you in selling wholesale through your WooCommerce store.
+
 
 With a variety of features in the free version, you won’t need another wholesale plugin for WooCommerce. 
 
 Actively updated for features, bug fixes and more! 
 
+
+
 == Features ==
 
+
 * Assign user’s to be wholesale customers. (This may be used for VIP guests for WooCommerce).
+
 * Global discount (percentage) for WooCommerce store.
 * Minimum purchase amount ($) for wholesale customers.
+
 * Wholesale pricing for each product (simple products and/or variations). Overwrites the global discount if wholesale price is set within a particular product.
 
+* [Translation ready](https://translate.wordpress.org/projects/wp-plugins/wholesale-customers-for-woo)
+
 = Upcoming Features =
+
 These features will be released in any order and may change according to our discretion.
 
 * Minimum/Maximum quantity per product.
@@ -45,6 +55,7 @@ These features will be released in any order and may change according to our dis
 * Email functionality for all wholesale customers.
 * List of all wholesale customers in one place.
 * Shipping methods based on wholesale customer.
+* Payment methods based on wholesale customer.
 * Import / Export products for WooCommerce (including custom product meta).
 * More features to be listed…
 
@@ -57,14 +68,15 @@ We currently offer three channels for support:
 
 We will try our best to assist you to the best of our ability.
 
-
 == Installation ==
+
 1. Upload the plugin files to the \'/wp-content/plugins\' directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the \'Plugins\' screen in WordPress.
 3. Navigate to \'WooCommerce\' and data will be showing under \'General Settings Tab\' > \'Pricing Options\'.
 4. To enable users to become wholesalers, simply enable the \'Wholesale Customer\' checkbox in the \'Edit User Profile\'.
 
 == Frequently Asked Questions ==
+
 = What version of WooCommerce does this support? =
 This has been tested on version 3.0 and up.
 
@@ -72,28 +84,46 @@ This has been tested on version 3.0 and up.
 If your product has a wholesale price set, this will overwrite the global discount.
 
 == Screenshots ==
+
 1. Set user to be a Wholesale Customer inside the user’s edit profile page.
 2. Set the global discount on your WooCommerce Store for wholesale customers.
 3. Minimum cart totals for WooCommerce checkout for wholesale customers.
 4. WooCommerce Simple product wholesale pricing.
 
 == Changelog ==
+
+= 1.0.4.1 =
+* Bug Fix: If variations had same price for min and max value, display only one price instead of variation price.
+* Enhancement: Subscribe to our newsletter prompt
+
+= 1.0.4 =
+* Enhancement: Translation support for GlotPress.
+* Bug Fix: Wholesale amounts would round-off.
+
 = 1.0.3 =
+
 * General Bug Fixes
 * Enhancement: Wholesale pricing for variation products ( Includes the pricing range to work with global discount + wholesale pricing at the same time).
 
 = 1.0.2 =
+
 * Enhancement: Wholesale pricing for simple product.
 
 = 1.0.1 =
+
 * Feature: minimum cart total for wholesale customers
 * Enhancement: Better UI for settings page.
 * Enhancement: Better coding structure for settings page.
 
 = 1.0.0 =
+
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+* Please upgrade Wholesale Customers For WooCommerce to receive bug fixes and new features.
+
 = 1.0.3 =
 * Please upgrade for new features and bug fixes.
 
