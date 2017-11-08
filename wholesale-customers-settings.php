@@ -34,15 +34,15 @@ class WCS_Settings {
 	$wcs_wholesale_customer = get_user_meta( $user->ID, 'wcs_wholesale_customer', true );
 	?>
 
-	<h3><?php _e( 'Wholesale Customer User Settings', 'wholesale-customer' ); ?></h3>
+	<h3><?php _e( 'Wholesale Customer User Settings', 'wholesale-customers-for-woo' ); ?></h3>
 
 	<table class="form-table">
 
 		<tr>
-			<th><label for="wholesale-customer"><?php _e( 'Wholesale customer', 'wholesale-customer' ); ?></label></th>
+			<th><label for="wholesale-customer"><?php _e( 'Wholesale customer', 'wholesale-customers-for-woo' ); ?></label></th>
 
 			<td>
-				<input type="checkbox" name="wcs_wholesale_customer" id="wcs_wholesale_customer" value="1" <?php checked( $wcs_wholesale_customer, 1 );?>/><?php _e( 'Check this option to set this user to receive your wholesale pricing', 'wholesale-customer' ); ?><br />
+				<input type="checkbox" name="wcs_wholesale_customer" id="wcs_wholesale_customer" value="1" <?php checked( $wcs_wholesale_customer, 1 );?>/><?php _e( 'Check this option to set this user to receive your wholesale pricing', 'wholesale-customers-for-woo' ); ?><br />
 				<!-- <span class="description"></span> -->
 			</td>
 		</tr>
@@ -74,7 +74,7 @@ class WCS_Settings {
      * @return array $settings_tabs Array of WooCommerce setting tabs & their labels, including the Subscription tab.
      */
     public static function add_settings_tab( $settings_tabs ) {
-        $settings_tabs['wcs_settings'] = __( 'Wholesale Settings', 'wholesale-customers' );
+        $settings_tabs['wcs_settings'] = __( 'Wholesale Settings', 'wholesale-customers-for-woo' );
         return $settings_tabs;
     }
 
@@ -110,15 +110,15 @@ class WCS_Settings {
 
         $settings = array(
             'section_title' => array(
-                'name'     => __( 'Wholesale Settings', 'wholesale-customers' ),
+                'name'     => __( 'Wholesale Settings', 'wholesale-customers-for-woo' ),
                 'type'     => 'title',
                 'desc'     => '',
                 'id'       => 'wcs_settings_tab_section_title'
             ),
 
     		'global_discount' => array(
-    		    'name'     => __( 'Wholesale Global Discount', 'wholesale-customers' ),
-        		'desc_tip' => __( 'This will give a global discount to all products on your WooCommerce Store.', 'wholesale-customers' ),
+    		    'name'     => __( 'Wholesale Global Discount', 'wholesale-customers-for-woo' ),
+        		'desc_tip' => __( 'This will give a global discount to all products on your WooCommerce Store.', 'wholesale-customers-for-woo' ),
 		        'id'       => 'wcs_global_discount',
 		        'type'     => 'number',
 		        'css'      => 'min-width:300px;',
@@ -129,12 +129,12 @@ class WCS_Settings {
 					'max'  => 100,
 					'step' => 1,
 				),
-        		'desc'     => __( 'Enter a percentage value (without % symbol).', 'wholesale-customers' ),
+        		'desc'     => __( 'Enter a percentage value (without % symbol).', 'wholesale-customers-for-woo' ),
         	),
 
         	'min_cart_amount' => array(
-        		'name'     => __( 'Minimum Cart Total', 'wholesale-customers' ),
-        		'desc_tip' => __( 'Force wholesale customers to spend a minimum before allowing checkout.', 'wholesale-customers' ),
+        		'name'     => __( 'Minimum Cart Total', 'wholesale-customers-for-woo' ),
+        		'desc_tip' => __( 'Force wholesale customers to spend a minimum before allowing checkout.', 'wholesale-customers-for-woo' ),
 		        'id'       => 'wcs_min_cart_amount',
 		        'type'     => 'number',
 		        'css'      => 'min-width:300px;',
@@ -144,7 +144,7 @@ class WCS_Settings {
 					'min'  => 0,
 					'step' => 1,
 				),
-        		'desc'     => __( 'Leave blank to ignore this feature.', 'wholesale-customers' ),
+        		'desc'     => __( 'Leave blank to ignore this feature.', 'wholesale-customers-for-woo' ),
 
         	),
 
@@ -159,7 +159,7 @@ class WCS_Settings {
 
     public static function add_custom_wholesale_cost_column_header( $columns ){
 
-        $columns['wholesale_price'] = __( 'Wholesale price', 'wholesale-customers' );
+        $columns['wholesale_price'] = __( 'Wholesale price', 'wholesale-customers-for-woo' );
 
         return $columns;
 
@@ -196,11 +196,11 @@ class WCS_Settings {
 
             if( ! empty( $variables ) ){
                 //echo $currency . number_format( $min_price, 2 ) . ' - ' . $currency . number_format( $max_price, 2 );
-                _e( 'N/A', 'wholesale-customers' );
+                _e( 'N/A', 'wholesale-customers-for-woo' );
             }elseif( $wholesale_price ) {
                  echo $currency . number_format( $wholesale_price, 2 );
             }else{
-                _e( 'N/A', 'wholesale-customers' );
+                _e( 'N/A', 'wholesale-customers-for-woo' );
             }
 
         }

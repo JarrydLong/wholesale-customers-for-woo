@@ -4,11 +4,17 @@
  * Description: Allow wholesale pricing for WooCommerce.
  * Author: YooHoo Plugins
  * Author URI: https://yoohooplugins.com
- * Version: 1.0.3
+ * Version: 1.0.4.1
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: wholesale-customers
+ * Text Domain: wholesale-customers-for-woo
  * Network: false
+ */
+
+/**
+ * 1.0.4.1 - 2017-11-08
+ * Bug Fix: If variations had same price for min and max value, display only one price instead of variation price.
+ * Enhancement: Subscribe to our newsletter prompt
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -20,14 +26,14 @@ function wcs_apply_wholesale_pricing( $price, $product ) {
 	global $current_user;
 
 	//let's just get the price
-	$discount_price = (int) $price;
+	$discount_price = floatval( $price );
 
 	$is_wholesale = get_user_meta( $current_user->ID, 'wcs_wholesale_customer', true );
 
-	if( !$is_wholesale ) {
-		return $discount_price;
+	if( $is_wholesale != '1' ) {
+		return $price;
 	}
-
+ 
 	// check to see if the current product has custom post meta, if it does don't apply the global discount.
 	$wholesale_price = get_post_meta( $product->get_id(), 'wholesale_price', true );
 
@@ -35,7 +41,7 @@ function wcs_apply_wholesale_pricing( $price, $product ) {
 		return $wholesale_price;
 	}
 
-	$wcs_global_discount = (int) get_option( 'wcs_global_discount', true );
+	$wcs_global_discount = floatval( get_option( 'wcs_global_discount', true ) );
 
 	if( empty( $wcs_global_discount ) && $wcs_global_discount < 1 ){
 		return $discount_price;
@@ -51,8 +57,6 @@ function wcs_apply_wholesale_pricing( $price, $product ) {
 		if( $discount_price <= 0 ){
 			$discount_price = 0;
 		}
-
-
 	
 	return $discount_price;
 }
@@ -85,13 +89,12 @@ function wcs_calculate_variation_range_prices( $variation_range_html, $product )
 	if( ! empty( $variables ) ) {
 
 		//we may need this later.
-		$wcs_global_discount = (int) get_option( 'wcs_global_discount', true );
+		$wcs_global_discount = floatval( get_option( 'wcs_global_discount', true ) );
 
 		if( $wcs_global_discount ) {
 			$percentage = $wcs_global_discount / 100;
 		}
 	
-
 		$prices['wholesale_price'] = array();
 
 		foreach( $variables as $variation ) {
@@ -113,7 +116,7 @@ function wcs_calculate_variation_range_prices( $variation_range_html, $product )
 						$price_w_discount = $prices['price'][$id] - $discount;
 
 						//add to array now.
-						$prices['wholesale_price'][$id] =  sprintf( "%.2f", $price_w_discount );
+						$prices['wholesale_price'][$id] =  sprintf( __( '%.2f', 'wholesale-customers-for-woo' ), $price_w_discount );
 
 					}else{
 						$prices['wholesale_price'][$id] = $prices['price'][$id];	
@@ -122,15 +125,15 @@ function wcs_calculate_variation_range_prices( $variation_range_html, $product )
 		}
 
 		if( ! empty( $prices['wholesale_price'] ) ) {
+
+		// Sort from low to high
 		asort( $prices['wholesale_price'] );
 
 		$wholesale_min_price = current( $prices['wholesale_price'] );
 		$wholesale_max_price = end( $prices['wholesale_price'] );
+
 		}
-
-		//sort from low to high for value.
 		
-
 	}else{
 
 		$min_price     = current( $prices['price'] );
@@ -142,7 +145,15 @@ function wcs_calculate_variation_range_prices( $variation_range_html, $product )
 
 	}
 
-	return wc_format_price_range( $wholesale_min_price, $wholesale_max_price );
+	if( $wholesale_min_price == $wholesale_max_price ) {
+        
+        return wc_price( $wholesale_max_price );
+    
+    } else {
+    
+        return wc_format_price_range($wholesale_min_price, $wholesale_max_price);  
+    
+    }  
 	
 }
 
@@ -161,7 +172,8 @@ function wcs_minimum_cart_total(){
 		return;
 	}
 
-	$minimum = (int) get_option( 'wcs_min_cart_amount' );
+	// Get float for minimum cart amount
+	$minimum = floatval( get_option( 'wcs_min_cart_amount' ) );
 
 	if( $minimum === 0 || empty( $minimum ) ) {
 		return;
@@ -172,7 +184,7 @@ function wcs_minimum_cart_total(){
     	if( is_cart() ) {
 
             wc_print_notice( 
-                sprintf( 'You must have an order with a minimum of %s to place your order, your current order total is %s.' , 
+                sprintf( __( 'You must have an order with a minimum of %s to place your order, your current order total is %s.', 'wholesale-customers-for-woo' ) , 
                     wc_price( $minimum ), 
                     wc_price( WC()->cart->total )
                 ), 'error' 
@@ -181,7 +193,7 @@ function wcs_minimum_cart_total(){
         } else {
 
             wc_add_notice( 
-                sprintf( 'You must have an order with a minimum of %s to place your order, your current order total is %s.' , 
+                sprintf( __( 'You must have an order with a minimum of %s to place your order, your current order total is %s.', 'wholesale-customers-for-woo' ) , 
                     wc_price( $minimum ), 
                     wc_price( WC()->cart->total )
                 ), 'error' 
@@ -197,7 +209,7 @@ add_action( 'woocommerce_before_cart' , 'wcs_minimum_cart_total' );
 
 
 function wcs_cost_product_field() {
-    woocommerce_wp_text_input( array( 'id' => 'wholesale_price', 'class' => 'wc_input_price short', 'label' => __( 'Wholesale price', 'wholesale-customers' ) . ' (' . get_woocommerce_currency_symbol() . ')' ) );
+    woocommerce_wp_text_input( array( 'id' => 'wholesale_price', 'class' => 'wc_input_price short', 'label' => __( 'Wholesale price', 'wholesale-customers-for-woo' ) . ' (' . get_woocommerce_currency_symbol() . ')' ) );
 }
 
 add_action( 'woocommerce_product_options_pricing', 'wcs_cost_product_field' );
@@ -237,9 +249,9 @@ function wcs_variation_settings_fields( $loop, $variation_data, $variation ) {
 	woocommerce_wp_text_input( 
 		array( 
 			'id'          => 'wholesale_price[' . $variation->ID . ']', 
-			'label'       => __( 'Wholesale price (' . get_woocommerce_currency_symbol() . ')', 'wholesale-customers' ), 
+			'label'       => __( 'Wholesale price (' . get_woocommerce_currency_symbol() . ')', 'wholesale-customers-for-woo' ), 
 			'desc_tip'    => 'true',
-			'description' => __( 'This price will be available to wholesale customers only. Overrites global discount.', 'wholesale-customers' ),
+			'description' => __( 'This price will be available to wholesale customers only. Overrites global discount.', 'wholesale-customers-for-woo' ),
 			'value'       => get_post_meta( $variation->ID, 'wholesale_price', true ),
 			'data_type'		  => 'price',
 		)
@@ -266,3 +278,70 @@ function wcs_save_variation_settings_fields( $post_id ) {
 
 }
 add_action( 'woocommerce_save_product_variation', 'wcs_save_variation_settings_fields', 10, 1 );
+
+add_action( 'wp_ajax_wholesale_customers_woo_newsletter', 'wholesale_customers_woo_newsletter_callback' );
+
+function wholesale_customers_woo_newsletter_callback(){
+
+	if( isset( $_POST['action'] ) && $_POST['action'] == 'wholesale_customers_woo_newsletter' ){
+
+		if( isset( $_POST['email'] ) && $_POST['email'] != "" ){
+
+		  $request = wp_remote_post( 'https://yoohooplugins.com/api/mailing_list/subscribe.php', array( 'body' => array( 'action' => 'wholesale_customers_woo_newsletter', 'email' => $_POST['email'] ) ) );
+
+		  if( !is_wp_error( $request ) ){
+
+		    $request_body = wp_remote_retrieve_body( $request );
+
+		    if( $request_body == 'subscribed' ){
+		      	
+		      	$user = wp_get_current_user();
+
+				update_user_meta( $user->ID, 'wholesale_customers_newsletter_popup', 1 );
+
+				echo 1;
+
+		    }
+
+		  } else {
+
+		  }
+
+		} else {
+
+		  _e('Please enter in an email address to subscribe to our mailing list and receive your 20% coupon', 'wholesale-customers-for-woo');
+
+		}
+
+	}
+
+	wp_die();
+
+}
+
+add_action( 'admin_notices', 'wholesale_customers_woo_admin_notices' );
+
+function wholesale_customers_woo_admin_notices(){
+
+	$user = wp_get_current_user();
+
+	if( get_user_meta( $user->ID, 'wholesale_customers_newsletter_popup', true ) !== '1'){
+    	?>
+	        <div class="notice notice-success  wll-update-notice-newsletter is-dismissible" >
+		        <h3><?php _e('Wholesale Customers for Woo', 'wholesale-customers-for-woo'); ?></h3>
+		        <p><?php printf( __( 'Thank you for using Wholesale Customers for Woo. If you find this plugin useful please consider leaving a 5 star review %s.', 'wholesale-customers-for-woo' ), '<a href="https://wordpress.org/plugins/wholesale-customers-for-woo/#reviews" target="_blank">here</a>' ); ?></p>
+		        <p><?php _e( 'Sign up for our newsletter to get the latest product news and promotions, plus get 20% off of your next add-on purchase!', 'wholesale-customers-for-woo' ); ?> <?php printf( __('Browse through our add-ons %s', 'wholesale-customers-for-woo'), '<a href="https://yoohooplugins.com/plugins/?utm_source=plugin&utm_medium=wholesale_customers&utm_campaign=premium_addons" target="_BLANK">'.__('here', 'wholesale-customers-for-woo').'</a>' ); ?></p>
+		        <p><input type='email' style='width: 250px;' name='wll_user_subscribe_to_newsletter' id='wll_user_subscribe_to_newsletter' value='<?php echo $user->data->user_email; ?>' /><button class='button button-primary' id='wholesale_customers_subscribe'><?php _e('Subscribe Me!', 'wholesale-customers-for-woo'); ?></button></p>
+	        </div>
+        <?php
+	}
+
+}
+
+add_action( 'admin_enqueue_scripts', 'wholesale_customers_woo_admin_scripts' );
+
+function wholesale_customers_woo_admin_scripts(){
+
+	wp_enqueue_script( 'wholesale-customers-for-woo-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
+
+}
