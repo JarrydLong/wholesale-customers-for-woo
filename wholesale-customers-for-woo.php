@@ -217,7 +217,7 @@ add_action( 'woocommerce_product_options_pricing', 'wcs_cost_product_field' );
 function wcs_cost_save_product( $product_id ) {
  
      // stop the quick edit interferring as this will stop it saving properly, when a user uses quick edit feature
-    if ( wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
+    if ( isset($_POST['_inline_edit']) && wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
     	return;
     }
 
