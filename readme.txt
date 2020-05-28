@@ -1,9 +1,9 @@
-﻿=== Wholesale Customers For WooCommerce ===
+=== Wholesale Customers For WooCommerce ===
 Contributors: andrewza, yoohooplugins, travislima
 Tags: woocommerce wholesale, wholesale plugin, wholesale prices, wholesale pricing, woocommerce wholesale pricing, woocommerce, wholesale
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4GC4JEZH7KSKL
 Requires at least: 4.6
-Tested up to: 4.8
+Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -17,9 +17,6 @@ A simple and easy to use B2B solution for WooCommerce. Wholesale Customers For W
 
 
 With a variety of features in the free version, you won’t need another wholesale plugin for WooCommerce. 
-
-Actively updated for features, bug fixes and more! 
-
 
 
 == Features ==
@@ -63,8 +60,7 @@ These features will be released in any order and may change according to our dis
 We currently offer three channels for support:
 
 1. [The WordPress.org repository](https://wordpress.org/support/plugin/wholesale-customers-for-woo)
-2. [YooHoo Plugins support forums](https://yoohooplugins.com/support/)
-3. [YooHoo Plugins email support](https://yoohooplugins.com/forums/forum/support-forum/)
+2. [Yoohoo Plugins support forums](https://yoohooplugins.com/support/)
 
 We will try our best to assist you to the best of our ability.
 
@@ -91,6 +87,14 @@ If your product has a wholesale price set, this will overwrite the global discou
 4. WooCommerce Simple product wholesale pricing.
 
 == Changelog ==
+
+= 1.0.5 - 28-05-2020 =
+* Bug Fix: Hide extra column when screens are too small. 
+* Enhancement: Removed admin notice, WordPress has enough of those for now.
+* Tested on latest version of WooCommerce and WordPress and updated versions.
+
+= 1.0.4.2 =
+* Bug Fix: Newsletter Optin form would not dismiss as expected
 
 = 1.0.4.1 =
 * Bug Fix: If variations had same price for min and max value, display only one price instead of variation price.
@@ -120,6 +124,9 @@ If your product has a wholesale price set, this will overwrite the global discou
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+* Please upgrade Wholesale Customers For WooCommerce to receive minor bug fixes.
 
 = 1.0.4 =
 * Please upgrade Wholesale Customers For WooCommerce to receive bug fixes and new features.
