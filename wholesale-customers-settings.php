@@ -22,6 +22,8 @@ class WCS_Settings {
 
         add_action( 'manage_product_posts_custom_column', array( 'WCS_Settings','add_custom_wholesale_cost_column' ), 10, 2 );
 
+        add_action( 'admin_head', array( 'WCS_Settings', 'hide_column_small_devices' ) );
+
     }
 
     public static function add_submenu_page() {
@@ -206,7 +208,17 @@ class WCS_Settings {
         }
     }
 
-
+    public static function hide_column_small_devices() {
+        if ( isset( $_REQUEST['post_type']) && $_REQUEST['post_type'] === 'product' ) {
+            ?>
+            <style>
+            @media only screen and (max-width: 1300px) {
+                th.manage-column.column-wholesale_price, td.wholesale_price.column-wholesale_price { display: none; }
+            }
+            </style>
+            <?php
+        }
+    }
 
 } // end class
 

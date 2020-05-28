@@ -2,19 +2,17 @@
 /**
  * Plugin Name: Wholesale Customers For Woo
  * Description: Allow wholesale pricing for WooCommerce.
- * Author: YooHoo Plugins
+ * Author: Yoohoo Plugins
  * Author URI: https://yoohooplugins.com
- * Version: 1.0.4.1
+ * Plugin URI: https://yoohooplugins.com?utm_source=woo_plugin
+ * Version: 1.0.5
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wholesale-customers-for-woo
  * Network: false
- */
-
-/**
- * 1.0.4.1 - 2017-11-08
- * Bug Fix: If variations had same price for min and max value, display only one price instead of variation price.
- * Enhancement: Subscribe to our newsletter prompt
+ * 
+ * WC requires at least: 3.0
+ * WC tested up to: 4.1
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -217,7 +215,7 @@ add_action( 'woocommerce_product_options_pricing', 'wcs_cost_product_field' );
 function wcs_cost_save_product( $product_id ) {
  
      // stop the quick edit interferring as this will stop it saving properly, when a user uses quick edit feature
-    if ( wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
+    if ( isset($_POST['_inline_edit']) && wp_verify_nonce($_POST['_inline_edit'], 'inlineeditnonce' ) ) {
     	return;
     }
 
@@ -278,70 +276,3 @@ function wcs_save_variation_settings_fields( $post_id ) {
 
 }
 add_action( 'woocommerce_save_product_variation', 'wcs_save_variation_settings_fields', 10, 1 );
-
-add_action( 'wp_ajax_wholesale_customers_woo_newsletter', 'wholesale_customers_woo_newsletter_callback' );
-
-function wholesale_customers_woo_newsletter_callback(){
-
-	if( isset( $_POST['action'] ) && $_POST['action'] == 'wholesale_customers_woo_newsletter' ){
-
-		if( isset( $_POST['email'] ) && $_POST['email'] != "" ){
-
-		  $request = wp_remote_post( 'https://yoohooplugins.com/api/mailing_list/subscribe.php', array( 'body' => array( 'action' => 'wholesale_customers_woo_newsletter', 'email' => $_POST['email'] ) ) );
-
-		  if( !is_wp_error( $request ) ){
-
-		    $request_body = wp_remote_retrieve_body( $request );
-
-		    if( $request_body == 'subscribed' ){
-		      	
-		      	$user = wp_get_current_user();
-
-				update_user_meta( $user->ID, 'wholesale_customers_newsletter_popup', 1 );
-
-				echo 1;
-
-		    }
-
-		  } else {
-
-		  }
-
-		} else {
-
-		  _e('Please enter in an email address to subscribe to our mailing list and receive your 20% coupon', 'wholesale-customers-for-woo');
-
-		}
-
-	}
-
-	wp_die();
-
-}
-
-add_action( 'admin_notices', 'wholesale_customers_woo_admin_notices' );
-
-function wholesale_customers_woo_admin_notices(){
-
-	$user = wp_get_current_user();
-
-	if( get_user_meta( $user->ID, 'wholesale_customers_newsletter_popup', true ) !== '1'){
-    	?>
-	        <div class="notice notice-success  wll-update-notice-newsletter is-dismissible" >
-		        <h3><?php _e('Wholesale Customers for Woo', 'wholesale-customers-for-woo'); ?></h3>
-		        <p><?php printf( __( 'Thank you for using Wholesale Customers for Woo. If you find this plugin useful please consider leaving a 5 star review %s.', 'wholesale-customers-for-woo' ), '<a href="https://wordpress.org/plugins/wholesale-customers-for-woo/#reviews" target="_blank">here</a>' ); ?></p>
-		        <p><?php _e( 'Sign up for our newsletter to get the latest product news and promotions, plus get 20% off of your next add-on purchase!', 'wholesale-customers-for-woo' ); ?> <?php printf( __('Browse through our add-ons %s', 'wholesale-customers-for-woo'), '<a href="https://yoohooplugins.com/plugins/?utm_source=plugin&utm_medium=wholesale_customers&utm_campaign=premium_addons" target="_BLANK">'.__('here', 'wholesale-customers-for-woo').'</a>' ); ?></p>
-		        <p><input type='email' style='width: 250px;' name='wll_user_subscribe_to_newsletter' id='wll_user_subscribe_to_newsletter' value='<?php echo $user->data->user_email; ?>' /><button class='button button-primary' id='wholesale_customers_subscribe'><?php _e('Subscribe Me!', 'wholesale-customers-for-woo'); ?></button></p>
-	        </div>
-        <?php
-	}
-
-}
-
-add_action( 'admin_enqueue_scripts', 'wholesale_customers_woo_admin_scripts' );
-
-function wholesale_customers_woo_admin_scripts(){
-
-	wp_enqueue_script( 'wholesale-customers-for-woo-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ) );
-
-}
