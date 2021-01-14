@@ -18,7 +18,15 @@
 defined( 'ABSPATH' ) or exit;
 
 // include settings page.
-include( 'wholesale-customers-settings.php' );
+require_once plugin_dir_path( __FILE__ ).'wholesale-customers-settings.php';
+require_once plugin_dir_path( __FILE__ ).'includes/wholesale-customers-subscribe.php';
+
+function wholesale_customers_woo_admin_scripts(){
+
+	wp_enqueue_script( 'wholesale-customers-for-woo-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ) );
+
+}
+add_action( 'admin_enqueue_scripts', 'wholesale_customers_woo_admin_scripts' );
 
 function wcs_apply_wholesale_pricing( $price, $product ) {
 	global $current_user;
